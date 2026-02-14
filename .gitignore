@@ -1,0 +1,27 @@
+# Python cache/artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local runtime data (notes, backups, images, settings)
+data/backups/
+data/images/
+data/session.json
+data/session.prev.json
+data/settings.json
+data/custom_dictionary.json

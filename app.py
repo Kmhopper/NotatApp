@@ -524,7 +524,7 @@ class GlobalHotkeyListener:
         if not ok:
             if self._on_error is not None:
                 self._on_error(
-                    "Kunne ikke registrere hurtigtast '|'. Prov aa lukke andre apper som bruker samme hurtigtast."
+                    "Kunne ikke registrere hurtigtast '|'. Prøv å lukke andre apper som bruker samme hurtigtast."
                 )
             return
 
@@ -854,7 +854,7 @@ class NoteOverlayApp:
         self.btn_auto_capture.pack(side="left", padx=(6, 0))
 
         btn_search = self._create_button(
-            self.toolbar_frame, "Sok", lambda: self.open_search_panel(replace_mode=False)
+            self.toolbar_frame, "Søk", lambda: self.open_search_panel(replace_mode=False)
         )
         btn_search.pack(side="left", padx=(6, 0))
 
@@ -866,7 +866,7 @@ class NoteOverlayApp:
         btn_bullet = self._create_button(self.toolbar_frame, "Bullet", self.toggle_bullets)
 
         self.btn_spellcheck = self._create_button(
-            self.toolbar_frame, "Stavekontroll: PAA", self.toggle_spellcheck
+            self.toolbar_frame, "Stavekontroll: PÅ", self.toggle_spellcheck
         )
 
         btn_mark_identical = self._create_button(
@@ -993,6 +993,8 @@ class NoteOverlayApp:
             highlightcolor=self.theme["border"],
         )
         self.text_frame.pack(fill="both", expand=True)
+        self.text_frame.grid_rowconfigure(0, weight=1)
+        self.text_frame.grid_columnconfigure(0, weight=1)
 
         self.text = tk.Text(
             self.text_frame,
@@ -1012,7 +1014,7 @@ class NoteOverlayApp:
             spacing2=4,
             spacing3=2,
         )
-        self.text.pack(side="left", fill="both", expand=True)
+        self.text.grid(row=0, column=0, sticky="nsew")
         self.text.tag_configure(BOLD_TAG, font=self.text_bold_font)
         self.text.tag_configure(SUPERSCRIPT_TAG, offset=4)
         self.text.tag_configure(IMAGE_TOKEN_HIDDEN_TAG, elide=True)
@@ -1030,7 +1032,7 @@ class NoteOverlayApp:
             bg=self.theme["button"],
             activebackground=self.theme["button_hover"],
         )
-        scroll.pack(side="right", fill="y", padx=(0, 2), pady=2)
+        scroll.grid(row=0, column=1, sticky="ns", padx=(0, 2), pady=2)
         self.text.configure(yscrollcommand=scroll.set)
 
         self.status_label = tk.Label(
@@ -1112,21 +1114,21 @@ class NoteOverlayApp:
 
     def show_help(self):
         shortcuts = [
-            "Ctrl+S: lagre naa",
+            "Ctrl+S: lagre nå",
             "|: vis/skjul notatvindu",
-            "Ctrl+F / Ctrl+H: sok / erstatt",
+            "Ctrl+F / Ctrl+H: søk / erstatt",
             "Ctrl+M: sett inn matteformel (LaTeX)",
             "Ctrl+Shift+F: fokusmodus",
             "Ctrl+Shift+T: innholdsfortegnelse",
-            "Ctrl+B: bold paa/av",
-            "Ctrl+Shift+B: bullet paa/av",
+            "Ctrl+B: bold på/av",
+            "Ctrl+Shift+B: bullet på/av",
             "Tab / Shift+Tab: bullet indent ut/inn",
             "Ctrl+Backspace: slett forrige ord",
             "Ctrl+Shift+M / Ctrl+Shift+R: marker like / erstatt like",
-            "Ctrl+Shift+L: stavekontroll paa/av",
+            "Ctrl+Shift+L: stavekontroll på/av",
             "Ctrl+, : innstillinger",
             "F1: denne hjelpen",
-            "Hoyreklikk paa ord: legg til i ordbok",
+            "Høyreklikk på ord: legg til i ordbok",
         ]
         messagebox.showinfo(
             "Hjelp og Shortcuts",
@@ -1209,7 +1211,7 @@ class NoteOverlayApp:
         ).grid(row=3, column=1, sticky="w", padx=6)
 
         tk.Label(
-            panel, text="Vindushoyde", bg=self.theme["card"], fg=self.theme["text"], font=self.ui_font
+            panel, text="Vindushøyde", bg=self.theme["card"], fg=self.theme["text"], font=self.ui_font
         ).grid(row=4, column=0, sticky="w", padx=12, pady=(8, 2))
         tk.Spinbox(
             panel,
@@ -1325,7 +1327,7 @@ class NoteOverlayApp:
         menu.add_separator()
         menu.add_command(label="Sett inn formel", command=self.insert_formula)
         menu.add_separator()
-        menu.add_command(label="Sok", command=lambda: self.open_search_panel(False))
+        menu.add_command(label="Søk", command=lambda: self.open_search_panel(False))
         menu.add_command(label="Erstatt like", command=self.replace_identical)
         menu.add_command(label="Marker like", command=self.mark_identical)
 
@@ -1338,7 +1340,7 @@ class NoteOverlayApp:
         return "break"
 
     def _refresh_focus_button(self):
-        label = "Fokus: PAA" if self.focus_mode else "Fokus: AV"
+        label = "Fokus: PÅ" if self.focus_mode else "Fokus: AV"
         self.btn_focus_mode.configure(text=label)
 
     def _set_focus_layout(self):
@@ -1363,7 +1365,7 @@ class NoteOverlayApp:
         self._set_focus_layout()
         self._refresh_focus_button()
         if self.focus_mode:
-            self._set_status("Fokusmodus PAA. Ctrl+Shift+F for aa avslutte.")
+            self._set_status("Fokusmodus PÅ. Ctrl+Shift+F for å avslutte.")
         else:
             self._set_status("Fokusmodus AV.")
 
@@ -1475,7 +1477,7 @@ class NoteOverlayApp:
         self._search_current_idx = -1
 
         if not needle:
-            self._set_status("Sokefelt tomt.")
+            self._set_status("Søkefelt tomt.")
             return
 
         self._search_match_ranges = self._find_search_matches()
@@ -1695,7 +1697,7 @@ class NoteOverlayApp:
         toc_scroll.pack(side="right", fill="y")
         self._toc_listbox.configure(yscrollcommand=toc_scroll.set)
 
-        btn_jump = self._create_button(panel, "Gaa til", self._jump_to_selected_toc_entry)
+        btn_jump = self._create_button(panel, "Gå til", self._jump_to_selected_toc_entry)
         btn_jump.pack(anchor="e", padx=6, pady=(0, 8))
 
         self._refresh_toc_listbox()
@@ -1890,7 +1892,7 @@ class NoteOverlayApp:
             self.bold_typing_mode = not self.bold_typing_mode
             self._refresh_bold_button()
             if self.bold_typing_mode:
-                self._set_status("Bold skrivemodus PAA. Trykk Ctrl+B for aa sla av.")
+                self._set_status("Bold skrivemodus PÅ. Trykk Ctrl+B for å slå av.")
             else:
                 self._set_status("Bold skrivemodus AV.")
             return
@@ -1900,7 +1902,7 @@ class NoteOverlayApp:
             self._set_status("Bold AV.")
         else:
             self.text.tag_add(BOLD_TAG, start, end)
-            self._set_status("Bold PAA.")
+            self._set_status("Bold PÅ.")
 
         self._dirty = True
         self.text.see("insert")
@@ -1989,13 +1991,13 @@ class NoteOverlayApp:
 
         matches = self._find_exact_occurrences(token)
         if not matches:
-            self._set_status("Fant ingen like treff aa endre.")
+            self._set_status("Fant ingen like treff å endre.")
             return
 
         label = self._short_token_label(token)
         replacement = simpledialog.askstring(
             "Erstatt like",
-            f"Ny tekst for '{label}'.\nLa feltet staa tomt for aa slette alle treff.",
+            f"Ny tekst for '{label}'.\nLa feltet stå tomt for å slette alle treff.",
             initialvalue=token,
             parent=self.root,
         )
@@ -2163,7 +2165,7 @@ class NoteOverlayApp:
     def _on_tab_indent(self, _event):
         changed = self._change_bullet_level(+1)
         if changed > 0:
-            self._set_status(f"Indent okte for {changed} punkt.")
+            self._set_status(f"Indent økte for {changed} punkt.")
             return "break"
         return None
 
@@ -2182,7 +2184,7 @@ class NoteOverlayApp:
         self._dirty = True
         self.text.see("insert")
         self._set_status(
-            "Bullet oppdatert. Shortcut: Ctrl+Shift+B. Nivaa: Tab / Shift+Tab."
+            "Bullet oppdatert. Shortcut: Ctrl+Shift+B. Nivå: Tab / Shift+Tab."
         )
 
     def _refresh_spellcheck_button(self):
@@ -2191,7 +2193,7 @@ class NoteOverlayApp:
             self.btn_spellcheck.configure(text="Stv: mangler", state="disabled")
             return
 
-        label = "Stv: PAA" if self.spellcheck_enabled else "Stv: AV"
+        label = "Stv: PÅ" if self.spellcheck_enabled else "Stv: AV"
         self.btn_spellcheck.configure(text=label, state="normal")
 
     def toggle_spellcheck(self):
@@ -2203,7 +2205,7 @@ class NoteOverlayApp:
         self._refresh_spellcheck_button()
 
         if self.spellcheck_enabled:
-            self._set_status("Stavekontroll PAA.")
+            self._set_status("Stavekontroll PÅ.")
             self._schedule_spellcheck()
             return
 
@@ -2404,7 +2406,7 @@ class NoteOverlayApp:
         self.root.attributes("-alpha", self._target_alpha())
 
     def _refresh_auto_capture_button(self):
-        label = "Auto: PAA" if self.auto_capture_enabled else "Auto: AV"
+        label = "Auto: PÅ" if self.auto_capture_enabled else "Auto: AV"
         self.btn_auto_capture.configure(text=label)
 
     def toggle_auto_capture(self):
@@ -2414,7 +2416,7 @@ class NoteOverlayApp:
             self._last_clipboard_signature = (
                 current_capture["signature"] if current_capture else None
             )
-            self._set_status("Auto-fangst PAA. Marker tekst i andre vinduer og trykk Ctrl+C.")
+            self._set_status("Auto-fangst PÅ. Marker tekst i andre vinduer og trykk Ctrl+C.")
         else:
             self._set_status("Auto-fangst AV.")
         self._refresh_auto_capture_button()
@@ -2979,12 +2981,12 @@ class NoteOverlayApp:
             self.text.focus_set()
             self.root.attributes("-alpha", 0.0)
             self._fade_to(self._target_alpha())
-            self._set_status("Notatvindu apnet.")
+            self._set_status("Notatvindu åpnet.")
         else:
             self._fade_to(0.0, on_complete=self._hide_window)
 
     def new_note(self):
-        if not messagebox.askyesno("Nytt notat", "Tomme notatet og starte paa nytt?"):
+        if not messagebox.askyesno("Nytt notat", "Tømme notatet og starte på nytt?"):
             return
         self.text.delete("1.0", "end")
         self._clear_identical_highlight()
@@ -3046,7 +3048,7 @@ class NoteOverlayApp:
 
     def _render_formula_to_image(self, latex_expression, target_path):
         if FigureCanvasAgg is None or Figure is None:
-            raise RuntimeError("Matplotlib mangler. Kjor: pip install matplotlib")
+            raise RuntimeError("Matplotlib mangler. Kjør: pip install matplotlib")
 
         expression = self._wrap_mathtext_expression(latex_expression)
         if not expression:
@@ -3145,8 +3147,8 @@ class NoteOverlayApp:
             messagebox.showerror(
                 "Formel feilet",
                 (
-                    "Klarte ikke aa rendre formel.\n"
-                    "Sjekk LaTeX-syntaks (MathText) og prov igjen.\n\n"
+                    "Klarte ikke å rendre formel.\n"
+                    "Sjekk LaTeX-syntaks (MathText) og prøv igjen.\n\n"
                     f"Feil: {exc}"
                 ),
                 parent=self.root,
@@ -3666,7 +3668,7 @@ class NoteOverlayApp:
 
         doc.save(target)
         self._set_status(f"Eksporterte Word: {target}")
-        messagebox.showinfo("Eksport fullfort", f"Lagret Word-fil:\n{target}")
+        messagebox.showinfo("Eksport fullført", f"Lagret Word-fil:\n{target}")
 
     def export_pdf(self):
         default_name = f"notater-{datetime.now():%Y%m%d-%H%M}.pdf"
@@ -3772,7 +3774,7 @@ class NoteOverlayApp:
 
         doc.build(story)
         self._set_status(f"Eksporterte PDF: {target}")
-        messagebox.showinfo("Eksport fullfort", f"Lagret PDF-fil:\n{target}")
+        messagebox.showinfo("Eksport fullført", f"Lagret PDF-fil:\n{target}")
 
     def on_close(self):
         if self._fade_after_id is not None:

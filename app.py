@@ -46,6 +46,9 @@ AUTOSAVE_MS = 2000
 AUTOSAVE_BACKUP_MS = 30000
 MAX_SESSION_BACKUPS = 120
 CLIPBOARD_POLL_MS = 700
+CLIPBOARD_OPEN_RETRIES = 12
+CLIPBOARD_OPEN_RETRY_DELAY_MS = 12
+
 IMAGE_TOKEN_PATTERN = re.compile(r"\[\[IMG:([0-9A-Za-z\-]+)\]\]")
 MULTISPACE_PATTERN = re.compile(r"[ \t]{2,}")
 SPELLCHECK_WORD_PATTERN = re.compile(
@@ -557,6 +560,9 @@ class NoteOverlayApp:
         )
         self._init_clipboard_api()
 
+        
+
+
         self.root = tk.Tk()
         self.root.title("Notat Overlay")
         self.root.geometry(self._geometry_from_settings())
@@ -631,6 +637,23 @@ class NoteOverlayApp:
         self.root.after(CLIPBOARD_POLL_MS, self._clipboard_watch_tick)
         self._schedule_spellcheck()
         self.text.focus_set()
+    def _open_clipboard_with_retry(self):
+            user32 = self._u32
+            for _ in range(CLIPBOARD_OPEN_RETRIES):
+                if user32.OpenClipboard(None):
+                    return True
+                try:
+                    self.root.update_idletasks()
+                    self.root.after(CLIPBOARD_OPEN_RETRY_DELAY_MS)
+                except Exception:
+                    pass
+            return False
+
+    def _close_clipboard_quietly(self):
+        try:
+            self._u32.CloseClipboard()
+        except Exception:
+            pass
 
     def _init_clipboard_api(self):
         self._u32 = ctypes.WinDLL("user32", use_last_error=True)
@@ -2447,7 +2470,7 @@ class NoteOverlayApp:
 
     def _clipboard_available_format_names(self):
         user32 = self._u32
-        if not user32.OpenClipboard(None):
+        if not self._open_clipboard_with_retry():
             return []
 
         names = []
@@ -2459,9 +2482,10 @@ class NoteOverlayApp:
                     break
                 names.append(self._clipboard_format_name(fmt))
         finally:
-            user32.CloseClipboard()
+            self._close_clipboard_quietly()
 
         return names
+
 
     def _read_clipboard_format_bytes(self, format_names, keyword=None):
         user32 = self._u32
@@ -2478,8 +2502,9 @@ class NoteOverlayApp:
         if not format_ids and not keyword:
             return None
 
-        if not user32.OpenClipboard(None):
+        if not self._open_clipboard_with_retry():
             return None
+
 
         raw_data = None
         try:
@@ -2520,7 +2545,8 @@ class NoteOverlayApp:
             finally:
                 kernel32.GlobalUnlock(handle)
         finally:
-            user32.CloseClipboard()
+            self._close_clipboard_quietly()
+
 
         if not raw_data:
             return None

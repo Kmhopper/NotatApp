@@ -8,19 +8,25 @@ echo ======================================
 echo.
 
 set "PY_CMD="
-where py >nul 2>nul
-if %errorlevel%==0 (
-    set "PY_CMD=py -3"
-) else (
-    where python >nul 2>nul
-    if %errorlevel%==0 (
-        set "PY_CMD=python"
-    )
+
+rem Prøv py først
+where py >nul 2>nul && set "PY_CMD=py -3"
+
+rem Hvis ikke, prøv python
+if not defined PY_CMD (
+    where python >nul 2>nul && set "PY_CMD=python"
 )
 
 if not defined PY_CMD (
     echo [FEIL] Fant ikke Python.
     echo Installer Python 3.11+ og prov igjen.
+    pause
+    exit /b 1
+)
+
+if not exist "requirements.txt" (
+    echo [FEIL] Fant ikke requirements.txt i samme mappe som denne filen.
+    echo Sjekk at du kjorer setup.bat fra prosjektmappa.
     pause
     exit /b 1
 )
